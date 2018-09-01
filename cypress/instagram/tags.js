@@ -5,8 +5,6 @@ function generateTag(themesA, verbsA) {
     return Math.floor(Math.random() * 2) % 2 === 0 ? `${themeRandom}${verbRandom}` : `${verbRandom}${themeRandom}`
 }
 
-console.log(generateTag(["travel", "portugal", "lisbon"], ["explore", "trip", "discover", "beautiful"]));
-
 module.exports = {
     generateTag
 }

@@ -17,7 +17,8 @@ function doLogin() {
 }
 
 function getNextTag() {
-	return generateTag(["travel", "portugal", "lisbon"], ["explore", "trip", "discover", "beautiful"]);
+	//return generateTag(["travel", "portugal", "lisbon"], ["explore", "trip", "discover", "beautiful"]);
+	return 'guatape';
 }
 
 
@@ -40,11 +41,18 @@ context('Instragram like automation', () => {
 			cy.get('div a > div').first().click();
 		});
 
-		for (let i = 0; i < 10; i++) {
-			cy.wait(2000);
-			cy.get('button.coreSpriteHeartOpen').click();
-			cy.wait(2000);
+		let nLikes = 0;
+		for (let i = 1; i < 800; i++) {
+			cy.wait(Math.round(Math.random() * 15000));
+
+			if((Math.round(Math.random() * 3) % 3) !== 0) {
+				cy.get('button.coreSpriteHeartOpen').click();
+				nLikes++;
+			}
+			cy.wait(Math.round(Math.random() * 25000));
 			cy.get('.coreSpriteRightPaginationArrow').click();
+
+			cy.writeFile('output/totalLikes.json', { nCycles: i, nLikes: nLikes });
 		}
 
     });
