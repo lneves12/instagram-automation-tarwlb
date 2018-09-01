@@ -1,24 +1,53 @@
 /// <reference types="Cypress" />
+const { generateTag } = require("../../instagram/tags.js");
+
+function doLogin() {
+	cy.visit('https://www.instagram.com/accounts/login/');
+	cy.clearCookies();
+	cy.visit('https://www.instagram.com/accounts/login/');
+
+	cy.get('input[name=username]')
+		.type(Cypress.config("username")).should('have.value', Cypress.config("username"));
+
+	cy.get('input[name=password]')
+		.type(Cypress.config("password")).should('have.value', Cypress.config("password"));
+
+	cy.get('button:contains(Log in)')
+		.click();
+}
+
+function getNextTag() {
+	return generateTag(["travel", "portugal", "lisbon"], ["explore", "trip", "discover", "beautiful"]);
+}
+
 
 context('Instragram like automation', () => {
-    beforeEach(() => {
-        cy.visit('https://www.instagram.com/accounts/login/')
-    })
+    beforeEach(() => { });
 
-    // https://on.cypress.io/interacting-with-elements
 
-    it('Liking by tag', () => {
-        // https://on.cypress.io/type
-        cy.get('input[name=username]')
-            .type(Cypress.config("username")).should('have.value', Cypress.config("username"));
+    it('Do like', () => {
 
-        cy.get('input[name=password]')
-            .type(Cypress.config("password")).should('have.value', Cypress.config("password"));
+		doLogin();
 
-        cy.get('button:contains(Log in)')
-            .click();
+		cy.wait(2000);
+		let tagURL = 'https://www.instagram.com/explore/tags/';
+		cy.visit(tagURL + getNextTag());
 
-    })
+		cy.wait(2000);
+
+		//Clicks on the first Most Recent post for the selected tag
+		cy.get('article > div').eq(1).within(() => {
+			cy.get('div a > div').first().click();
+		});
+
+		for (let i = 0; i < 10; i++) {
+			cy.wait(2000);
+			cy.get('button.coreSpriteHeartOpen').click();
+			cy.wait(2000);
+			cy.get('.coreSpriteRightPaginationArrow').click();
+		}
+
+    });
 
     // it('.focus() - focus on a DOM element', () => {
     //     // https://on.cypress.io/focus
@@ -256,4 +285,4 @@ context('Instragram like automation', () => {
     //         .get('input[type=range]').siblings('p')
     //         .should('have.text', '25')
     // })
-})
+});
