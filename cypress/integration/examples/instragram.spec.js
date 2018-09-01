@@ -42,6 +42,7 @@ context('Instragram like automation', () => {
 		});
 
 		let nLikes = 0;
+		let fileName = Date.now() + '_totalLikes.json';
 		for (let i = 1; i < 800; i++) {
 			cy.wait(Math.round(Math.random() * 15000));
 
@@ -52,7 +53,7 @@ context('Instragram like automation', () => {
 			cy.wait(Math.round(Math.random() * 25000));
 			cy.get('.coreSpriteRightPaginationArrow').click();
 
-			cy.writeFile('output/totalLikes.json', { nCycles: i, nLikes: nLikes });
+			cy.writeFile('output/' + fileName, { nCycles: i, nLikes: nLikes });
 		}
 
     });
